@@ -134,4 +134,4 @@ client.on('message', (message) => {
 client.on("guildMemberAdd" ,(message, member) => {
   member.guild.channels.get('392785486692745216').send("Welcome <:OwO:395688749612400669>"); 
   });
-client.login(process.env.NDQ2MDA1MjE0NzU2MjA4NjUw.Dd58gA.Vzq9eNjE7AEvfh6L9poBbPFpoDw);
+client.login(process.env.BOT_TOKEN);
