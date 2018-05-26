@@ -1,0 +1,137 @@
+console.log('Ikimasu!');
+const Discord = require('discord.js');
+const newUsers = new Discord.Collection();
+const ytdl = require('ytdl-core');
+
+const client = new Discord.Client();
+const prefix = 'j-';
+const snekfetch = require('snekfetch');
+const cooldowns = new Discord.Collection();
+const trim = (str, max) => (str.length > max) ? `${str.slice(0, max - 3)}...` : str;
+const embed = new Discord.RichEmbed()
+
+
+client.on("ready", () => {
+
+  client.user.setPresence( {
+    game: {
+      name: `Fate/Grand Order`,
+      type: "STREAMING",
+       url: 'https://www.twitch.tv/itzthunderuwu'
+    }
+  });
+  client.user.setUsername('JalterBot');
+  client.user.setStatus('dnd');
+
+      console.log("Ittai, daijobu");
+
+});
+client.on('message', (message) => {
+    if (message.content.startsWith(prefix + "about")) {
+        message.channel.sendMessage('***JalterBot by:*** <@218545218729803776> (con ayuda de <@221424231475445761>, Gracias owo), *Mas cosas en el Futuro baka* https://cdn.discordapp.com/attachments/338803172132913158/438451042867347477/Profile_52_Thunder.png');
+    }
+    if (message.content == 'xd') {
+        message.channel.sendMessage('<:DX:392790572156321792>');
+    }
+    if (message.content === 'Jalter') {
+        message.channel.sendMessage('Besto Servant owo');
+        message.react('446402206875254794');
+    }
+    if (message.content == 'Puerca') {
+        message.channel.sendMessage('Ur Mom gay');
+    }
+    if (message.content == 'Tadaima') {
+        message.channel.sendMessage('Oh... ya volviste <:SataniaDead:446768470890381313>');
+    }
+    if (message.content.startsWith(prefix + "serverinfo")) {
+    const embed = new Discord.RichEmbed()
+      .setColor('#9d02e2')
+      .setTitle('Server Info')
+      .setThumbnail(message.guild.iconURL)
+      .addField('Nombre del Server:', `${message.guild.name}`)
+      .addField('Fundacion:', `${message.guild.createdAt}`)
+      .addField('Region:', `${message.guild.region}`)
+      .addField('Miembros:', `${message.guild.memberCount}`);
+
+    message.channel.send(embed);
+    }
+    if (message.content.startsWith(prefix + "userinfo")) {
+    const embed = new Discord.RichEmbed()
+      .setColor('#9d02e2')
+      .setTitle('User Info')
+      .addField('Nombre:', `${message.author.username}`)
+      .addField('ID:', `${message.author.id}`)
+      .addField('Avatar:', `${message.author.displayAvatarURL}`);
+
+    message.channel.send(embed);
+    }
+    if (message.content.startsWith(prefix + "stats")) {
+       message.reply(`**Server count:** *${client.guilds.size}*`);
+    }
+   if (message.content.startsWith(prefix + "commands")) {
+      message.channel.sendMessage('**Lista de comandos disponibles *(todos inician con su prefix j-):***\n`about:` *Info del bot, creador, etc.*\n`serverinfo:` *Nombre del server, Fundacion, Region y Total de miembros.*\n`userinfo:` *Nombre, ID y Avatar del usuario.*\n`stats:` *Estadisticas del bot.*\n`ban:` *De momento no sirve u.u*')
+   }
+   if (message.content.startsWith(prefix + 'delete')) {
+        message.channel.send('**Este mensaje se autodestruira :v**')
+            .then(sentMessage => sentMessage.delete(10))
+            .catch(error => {
+                // handle error
+            });
+    }
+    if (message.content.startsWith(prefix + "kick")) {
+
+        let user = message.mentions.users.first();
+        args = message.content.slice(message.content.indexOf(' ') + 1);
+        let razon = args.split(' ').slice(1).join(' ');
+
+        var permissions = message.member.hasPermission("KICK_MEMBERS");
+
+        if (!permissions) return message.channel.send("**Error** `|` No tienes permisos para hacer esto.");
+
+        if (message.mentions.users.size < 1) return message.reply("Tienes que mencionar a la victima <:MeguminDesprecio:448216958647926804>").catch(console.error);
+        if (!razon) return message.channel.send("Escribe la razon.");
+        if (!message.guild.member(user).kickable) return message.reply("No tengo permisos para sacarlo <:HideriPray:448217361107910667>");
+
+        message.guild.member(user).kick(razon);
+        message.channel.send(`**${user.username}** ha sido **expulsado** con exito. \n**Razon:** ${razon}.`);
+
+      }
+    if (message.content.startsWith(prefix + "ban")) {
+
+        let user = message.mentions.users.first();
+        args = message.content.slice(message.content.indexOf(' ') + 1);
+        let razon = args.split(' ').slice(1).join(' ');
+
+        var permissions = message.member.hasPermission("BAN_MEMBERS");
+
+        if (!permissions) return message.channel.send("**Error** `|` No tienes permiso para hacer esto.");
+
+        if (message.mentions.users.size < 1) return message.reply("Tienes que mencionar a la victima <:MeguminDesprecio:448216958647926804>").catch(console.error);
+        if (!razon) return message.channel.send("Escribe la razon");
+        if (!message.guild.member(user).bannable) return message.reply("No tengo permisos para banearlo <:HideriPray:448217361107910667>");
+
+        message.guild.member(user).ban(razon);
+        message.channel.send(`**${user.username}** ha sido **baneado** con exito. \n**Razon:** ${razon}.`);
+
+      }
+    if (message.content.startsWith(prefix + 'play')) {
+        if (message.channel.type !== 'text') return;
+
+        const { voiceChannel } = message.member;
+
+        if (!voiceChannel) {
+            return message.reply('Entra a un canal de voz primero tonto!');
+        }
+
+        voiceChannel.join().then(connection => {
+            const stream = ytdl('https://www.youtube.com/watch?v=LfjwaiACl1Q&t=0s&index=60&list=PL530C8iRxV52DBEWXYwfnwJUno_PICqeb', { filter: 'audioonly' });
+            const dispatcher = connection.playStream(stream);
+
+            dispatcher.on('end', () => voiceChannel.leave());
+        });
+    }
+});
+client.on("guildMemberAdd" ,(message, member) => {
+  member.guild.channels.get('392785486692745216').send("Welcome <:OwO:395688749612400669>"); 
+  });
+client.login(process.env.NDQ2MDA1MjE0NzU2MjA4NjUw.Dd58gA.Vzq9eNjE7AEvfh6L9poBbPFpoDw);
