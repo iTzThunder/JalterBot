@@ -1,0 +1,18 @@
+{
+  "name": "jalterbot",
+  "version": "1.0.0",
+  "description": "A beautiful waifu owo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "iTzThunder",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.3.2",
+    "ffmpeg-binaries": "^3.2.2-3",
+    "npm": "^6.0.1",
+    "snekfetch": "^4.0.0",
+    "ytdl-core": "^0.20.4"
+  }
+}
